@@ -1,0 +1,2454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Character Codex</title>
+
+<!-- iOS Home Screen App Meta Tags -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Codex">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f1117">
+<meta name="format-detection" content="telephone=no">
+
+<!-- iOS Home Screen Icon (gold C on dark background, inline SVG as data URI) -->
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgZmlsbD0iIzBmMTExNyIvPjxyZWN0IHg9IjQiIHk9IjQiIHdpZHRoPSIxNzIiIGhlaWdodD0iMTcyIiBmaWxsPSJub25lIiBzdHJva2U9IiNkNGE5NjAiIHN0cm9rZS13aWR0aD0iMyIgcng9IjI0Ii8+PHRleHQgeD0iOTAiIHk9IjEyMCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsIHNlcmlmIiBmb250LXNpemU9IjExMCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI2Q0YTk2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjAuMDVlbSI+QzwvdGV4dD48dGV4dCB4PSI5MCIgeT0iMTQ4IiBmb250LWZhbWlseT0iR2VvcmdpYSwgc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM4YTcxNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGxldHRlci1zcGFjaW5nPSIwLjJlbSI+Q09ERVg8L3RleHQ+PC9zdmc+">
+
+<!-- Generic favicon for browser tab -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230f1117'/><text x='50' y='72' font-family='Georgia,serif' font-size='70' fill='%23d4a960' text-anchor='middle'>C</text></svg>">
+
+<style>
+/* iOS Safari fixes */
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  padding: 0;
+  /* Respect iOS safe areas (notch, home indicator) */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+/* Disable iOS text selection callout on long-press */
+* {
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+/* Allow selection in inputs and textareas */
+input, textarea, select {
+  -webkit-user-select: text;
+  user-select: text;
+}
+/* Smooth scrolling */
+body, html {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+/* Fix iOS input zoom — must be 16px+ */
+input[type="text"], input[type="number"], textarea, select {
+  font-size: 16px !important;
+}
+/* Adjust nav for iOS home indicator */
+.nav {
+  padding-bottom: max(8px, env(safe-area-inset-bottom)) !important;
+}
+</style>
+
+</head>
+<body>
+
+<!-- ========== APP CONTENT START ========== -->
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg-elev: #161924;
+    --bg-card: #1c2030;
+    --bg-card-hover: #232838;
+    --border: #2a2f42;
+    --border-strong: #3a4159;
+    --text: #e8e6df;
+    --text-dim: #9a9587;
+    --text-muted: #6b6759;
+    --gold: #d4a960;
+    --gold-bright: #e8c275;
+    --gold-dim: #8a7140;
+    --red: #c95d5d;
+    --green: #6db865;
+    --yellow: #d4b04a;
+    --blue: #6b8fc4;
+    --purple: #9b7bc4;
+    --crimson: #8b3a3a;
+    --parchment: #2a2418;
+    --font-serif: 'Cinzel', 'Trajan Pro', Georgia, serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .app {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 16px 100px;
+  }
+
+  /* HEADER */
+  .header {
+    padding: 24px 8px 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .title {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 13px;
+    font-style: italic;
+    letter-spacing: 0.03em;
+  }
+
+  /* NAV */
+  .nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-elev);
+    border-top: 1px solid var(--border);
+    padding: 8px 4px;
+    display: flex;
+    justify-content: space-around;
+    z-index: 100;
+  }
+  .nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-size: 11px;
+    font-family: var(--font-body);
+    padding: 8px 6px;
+    cursor: pointer;
+    flex: 1;
+    border-radius: 6px;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    max-width: 100px;
+  }
+  .nav-btn.active {
+    color: var(--gold);
+    background: rgba(212, 169, 96, 0.08);
+  }
+  .nav-btn:hover { color: var(--gold-bright); }
+  .nav-icon {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  /* VIEW */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .card-gold {
+    border-color: var(--gold-dim);
+    background: linear-gradient(180deg, var(--bg-card) 0%, #221c10 100%);
+  }
+  .card-title {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .card-section-title {
+    font-family: var(--font-serif);
+    font-size: 13px;
+    color: var(--gold-dim);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin: 12px 0 8px;
+  }
+
+  /* CHARACTER SHEET */
+  .char-header {
+    text-align: center;
+    padding: 16px 0;
+  }
+  .char-name {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .char-class {
+    color: var(--text-dim);
+    font-size: 13px;
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+  .char-level {
+    display: inline-block;
+    padding: 4px 16px;
+    border: 1px solid var(--gold-dim);
+    border-radius: 4px;
+    color: var(--gold-bright);
+    font-family: var(--font-serif);
+    font-size: 14px;
+    letter-spacing: 0.05em;
+  }
+
+  .xp-bar-wrap {
+    margin: 16px 0 8px;
+  }
+  .xp-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .xp-bar {
+    height: 8px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .xp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold-bright) 100%);
+    transition: width 0.4s ease;
+  }
+
+  /* STATS GRID */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .stat {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .stat-label {
+    font-family: var(--font-serif);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .stat-value {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  /* PHASE BANNER */
+  .phase-banner {
+    background: linear-gradient(135deg, #2a1f10 0%, #3a2a14 100%);
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .phase-label {
+    font-size: 10px;
+    color: var(--gold-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .phase-name {
+    font-family: var(--font-serif);
+    font-size: 14px;
+    color: var(--gold-bright);
+    letter-spacing: 0.04em;
+  }
+  .phase-week {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* INJURY (DEBUFF) */
+  .debuff {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--crimson);
+    border-radius: 4px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+  .debuff-name {
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .debuff-bar-wrap {
+    margin-top: 6px;
+  }
+  .debuff-bar {
+    height: 4px;
+    background: var(--bg);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .debuff-bar-fill {
+    height: 100%;
+    background: var(--green);
+    transition: width 0.4s ease;
+  }
+  .debuff-bar-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* QUEST CARD (TODAY) */
+  .quest-card {
+    background: var(--bg-card);
+    border: 1px solid var(--gold-dim);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .quest-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .quest-tag {
+    background: rgba(212, 169, 96, 0.1);
+    color: var(--gold);
+    padding: 2px 8px;
+    border: 1px solid var(--gold-dim);
+    border-radius: 3px;
+    font-size: 10px;
+  }
+  .quest-name {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+  }
+  .quest-desc {
+    color: var(--text-dim);
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .quest-xp {
+    color: var(--gold-bright);
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  /* CHECKLIST */
+  .checklist {
+    margin: 8px 0;
+  }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 4px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .check-item:last-child { border-bottom: none; }
+  .check-item:hover { background: rgba(255, 255, 255, 0.02); }
+  .check-box {
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    background: var(--bg);
+    transition: all 0.15s;
+  }
+  .check-item.done .check-box {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+  .check-item.done .check-box::after {
+    content: '✓';
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .check-item.done .check-text {
+    color: var(--text-muted);
+    text-decoration: line-through;
+  }
+  .check-text {
+    font-size: 13px;
+    color: var(--text);
+    flex: 1;
+    line-height: 1.4;
+  }
+  .check-detail {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* BUTTONS */
+  .btn {
+    background: var(--bg-elev);
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-family: var(--font-serif);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .btn:hover {
+    background: rgba(212, 169, 96, 0.1);
+    border-color: var(--gold);
+    color: var(--gold-bright);
+  }
+  .btn-primary {
+    background: var(--gold-dim);
+    color: var(--bg);
+  }
+  .btn-primary:hover {
+    background: var(--gold);
+    color: var(--bg);
+  }
+  .btn-row {
+    display: flex;
+    gap: 8px;
+  }
+  .btn-row .btn { margin-top: 0; }
+  .btn-sm {
+    padding: 6px 10px;
+    font-size: 10px;
+    width: auto;
+  }
+  .btn-danger {
+    border-color: var(--crimson);
+    color: var(--red);
+  }
+  .btn-danger:hover {
+    background: rgba(201, 93, 93, 0.1);
+  }
+
+  /* INPUTS */
+  input[type="text"], input[type="number"], textarea, select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    width: 100%;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--gold-dim);
+  }
+  input[type="range"] {
+    width: 100%;
+    accent-color: var(--gold);
+  }
+  input[type="file"] {
+    display: none;
+  }
+  label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    margin-top: 12px;
+  }
+
+  /* METRIC SLIDERS */
+  .metric-row {
+    margin-bottom: 14px;
+  }
+  .metric-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+  .metric-name {
+    color: var(--text);
+  }
+  .metric-value {
+    color: var(--gold);
+    font-weight: 500;
+    font-family: var(--font-serif);
+  }
+
+  /* WEEK CARDS */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  .week-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+  }
+  .week-card:hover {
+    border-color: var(--gold-dim);
+    background: var(--bg-card-hover);
+  }
+  .week-card.current {
+    border-color: var(--gold);
+    background: rgba(212, 169, 96, 0.05);
+  }
+  .week-card.deload {
+    border-color: var(--blue);
+  }
+  .week-card.goal {
+    border-color: var(--gold);
+    background: rgba(212, 169, 96, 0.1);
+  }
+  .week-num {
+    font-family: var(--font-serif);
+    font-size: 14px;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .week-phase {
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* DAY TABS */
+  .day-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .day-tab {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-family: var(--font-serif);
+  }
+  .day-tab.active {
+    background: var(--gold-dim);
+    color: var(--bg);
+    border-color: var(--gold);
+  }
+
+  /* CHEAT SHEETS */
+  .cheat-list {
+    display: grid;
+    gap: 10px;
+  }
+  .cheat-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .cheat-item:hover {
+    border-color: var(--gold-dim);
+    background: var(--bg-card-hover);
+  }
+  .cheat-name {
+    font-family: var(--font-serif);
+    font-size: 14px;
+    color: var(--gold);
+    margin-bottom: 4px;
+    letter-spacing: 0.03em;
+  }
+  .cheat-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* TRAFFIC LIGHT */
+  .traffic-row {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .traffic-cell {
+    flex: 1;
+    padding: 12px;
+    border-radius: 6px;
+    text-align: center;
+  }
+  .traffic-green { background: rgba(109, 184, 101, 0.1); border: 1px solid var(--green); }
+  .traffic-yellow { background: rgba(212, 176, 74, 0.1); border: 1px solid var(--yellow); }
+  .traffic-red { background: rgba(201, 93, 93, 0.1); border: 1px solid var(--red); }
+  .traffic-label {
+    font-family: var(--font-serif);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .traffic-green .traffic-label { color: var(--green); }
+  .traffic-yellow .traffic-label { color: var(--yellow); }
+  .traffic-red .traffic-label { color: var(--red); }
+  .traffic-text {
+    font-size: 11px;
+    color: var(--text);
+  }
+
+  /* MODAL */
+  .modal-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 200;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 20px 16px 100px;
+  }
+  .modal-bg.active { display: flex; }
+  .modal {
+    background: var(--bg-elev);
+    border: 1px solid var(--gold-dim);
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal-title {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  /* PHOTO PROOF */
+  .proof-zone {
+    border: 1px dashed var(--border-strong);
+    border-radius: 6px;
+    padding: 16px;
+    text-align: center;
+    margin: 12px 0;
+    cursor: pointer;
+    background: var(--bg);
+    transition: all 0.15s;
+  }
+  .proof-zone:hover {
+    border-color: var(--gold-dim);
+    background: var(--bg-elev);
+  }
+  .proof-zone.has-photo {
+    padding: 0;
+    border: 1px solid var(--gold-dim);
+    overflow: hidden;
+  }
+  .proof-zone img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    display: block;
+  }
+  .proof-text {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .proof-text-strong {
+    color: var(--gold);
+    font-family: var(--font-serif);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-200%);
+    background: var(--bg-elev);
+    border: 1px solid var(--gold);
+    border-radius: 6px;
+    padding: 12px 20px;
+    color: var(--gold-bright);
+    font-family: var(--font-serif);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    z-index: 300;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+  }
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* HISTORY */
+  .history-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 60px;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    align-items: center;
+  }
+  .history-date {
+    color: var(--text-dim);
+    font-family: var(--font-serif);
+  }
+  .history-bar-wrap {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+  }
+  .history-bar {
+    height: 16px;
+    background: var(--bg);
+    border-radius: 2px;
+    position: relative;
+  }
+  .history-bar-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 2px;
+  }
+  .history-xp {
+    color: var(--gold);
+    font-size: 11px;
+    text-align: right;
+    font-family: var(--font-serif);
+  }
+
+  /* CHEAT SHEET CONTENT */
+  .cheat-content h3 {
+    font-family: var(--font-serif);
+    color: var(--gold);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 14px 0 8px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+  }
+  .cheat-content p {
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .cheat-content ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  .cheat-content li {
+    font-size: 13px;
+    padding: 6px 0 6px 20px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .cheat-content li:last-child { border-bottom: none; }
+  .cheat-content li::before {
+    content: '◆';
+    color: var(--gold-dim);
+    position: absolute;
+    left: 4px;
+    top: 6px;
+    font-size: 10px;
+  }
+  .cheat-content strong {
+    color: var(--gold-bright);
+    font-weight: 500;
+  }
+
+  /* GROCERY */
+  .grocery-cat {
+    margin-bottom: 16px;
+  }
+  .grocery-cat-name {
+    font-family: var(--font-serif);
+    font-size: 12px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .grocery-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .grocery-item.checked .grocery-text {
+    color: var(--text-muted);
+    text-decoration: line-through;
+  }
+
+  /* PHASE GATE */
+  .gate-criterion {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+  .gate-criterion.met {
+    border-color: var(--green);
+    background: rgba(109, 184, 101, 0.05);
+  }
+  .gate-criterion-name {
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+  .divider-fancy {
+    text-align: center;
+    margin: 16px 0;
+    color: var(--gold-dim);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .nav-btn { font-size: 10px; }
+    .title { font-size: 22px; }
+  }
+</style>
+
+<div class="app">
+  <div class="header">
+    <div class="title">Character Codex</div>
+    <div class="subtitle">A 12-Week Tale of Forging the Body</div>
+  </div>
+
+  <!-- TODAY VIEW -->
+  <div id="view-today" class="view active">
+    <div class="phase-banner">
+      <div class="phase-label">Current Chapter</div>
+      <div class="phase-name" id="today-phase">Loading...</div>
+      <div class="phase-week" id="today-week">Week 1, Day 1</div>
+    </div>
+
+    <div id="today-content"></div>
+
+    <div class="card">
+      <div class="card-title">Daily Chronicle</div>
+      <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 8px;">Log your five daily metrics. The codex remembers all.</p>
+      <div id="metric-sliders"></div>
+      <button class="btn btn-primary" onclick="saveMetrics()">Inscribe Today's Record</button>
+    </div>
+  </div>
+
+  <!-- CHARACTER VIEW -->
+  <div id="view-character" class="view">
+    <div class="card card-gold">
+      <div class="char-header">
+        <div class="char-name" id="char-name-display">Unnamed Adventurer</div>
+        <div class="char-class" id="char-class-display">Warrior-Athlete · Forging Path</div>
+        <div class="char-level" id="char-level-display">Level 1</div>
+      </div>
+
+      <div class="xp-bar-wrap">
+        <div class="xp-bar-label">
+          <span>Experience</span>
+          <span id="xp-text">0 / 100 XP</span>
+        </div>
+        <div class="xp-bar">
+          <div class="xp-bar-fill" id="xp-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <div class="card-section-title">Attributes</div>
+      <div class="stats-grid" id="stats-grid"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Wounds &amp; Healing</div>
+      <p style="font-size: 11px; color: var(--text-dim); margin-bottom: 12px; font-style: italic;">Five wounds afflict thee. Each shall mend with patient training.</p>
+      <div id="debuffs"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Identity</div>
+      <label>Adventurer's Name</label>
+      <input type="text" id="char-name-input" placeholder="Enter your name">
+      <label>Class / Path</label>
+      <select id="char-class-input">
+        <option value="Warrior-Athlete · Forging Path">Warrior-Athlete · Forging Path</option>
+        <option value="Ranger-Runner · Endurance Path">Ranger-Runner · Endurance Path</option>
+        <option value="Monk-Striker · Soccer Path">Monk-Striker · Soccer Path</option>
+        <option value="Bard-Chef · Culinary Path">Bard-Chef · Culinary Path</option>
+        <option value="Paladin · Triathlete Path">Paladin · Triathlete Path</option>
+      </select>
+      <button class="btn" onclick="saveIdentity()">Save Identity</button>
+    </div>
+  </div>
+
+  <!-- WEEKS VIEW -->
+  <div id="view-weeks" class="view">
+    <div class="card">
+      <div class="card-title">The Twelve-Week Saga</div>
+      <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 12px;">Tap any week to view its daily quests.</p>
+      <div class="week-grid" id="week-grid"></div>
+    </div>
+    <div id="week-detail" style="display: none;"></div>
+  </div>
+
+  <!-- CHEATS VIEW -->
+  <div id="view-cheats" class="view">
+    <div class="card">
+      <div class="card-title">The Tomes &amp; Cheat Sheets</div>
+      <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 12px;">Quick reference for the wandering athlete.</p>
+      <div class="cheat-list" id="cheat-list"></div>
+    </div>
+  </div>
+
+  <!-- HISTORY VIEW -->
+  <div id="view-history" class="view">
+    <div class="card">
+      <div class="card-title">Chronicle of Deeds</div>
+      <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 12px;">Last 14 days of recorded XP and metrics.</p>
+      <div id="history-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Weekly Council Check-In</div>
+      <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 12px;">Sunday review. Be honest with thy own counsel.</p>
+      <button class="btn btn-primary" onclick="openCheckIn()">Open Weekly Check-In</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Phase Gates</div>
+      <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 12px;">Three trials must be passed before progressing.</p>
+      <button class="btn" onclick="openGate(4)">Week 4 Gate</button>
+      <button class="btn" onclick="openGate(8)">Week 8 Gate</button>
+      <button class="btn" onclick="openGate(12)">Week 12 Goal</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Codex Settings</div>
+      <button class="btn" onclick="exportData()">Export All Data (JSON)</button>
+      <button class="btn btn-danger" onclick="if(confirm('Reset all progress? This cannot be undone.')) resetAll();">Reset All Progress</button>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn active" onclick="switchView('today', this)"><span class="nav-icon">◈</span>Today</button>
+    <button class="nav-btn" onclick="switchView('character', this)"><span class="nav-icon">⚔</span>Sheet</button>
+    <button class="nav-btn" onclick="switchView('weeks', this)"><span class="nav-icon">◊</span>Saga</button>
+    <button class="nav-btn" onclick="switchView('cheats', this)"><span class="nav-icon">◆</span>Tomes</button>
+    <button class="nav-btn" onclick="switchView('history', this)"><span class="nav-icon">◉</span>Chronicle</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this) closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== STATE & STORAGE ==========
+const STORAGE_KEY = 'character_codex_v1';
+let state = {
+  identity: {
+    name: 'Unnamed Adventurer',
+    class: 'Warrior-Athlete · Forging Path'
+  },
+  level: 1,
+  xp: 0,
+  startDate: null,
+  stats: {
+    Strength: 1,
+    Endurance: 1,
+    Mobility: 1,
+    Recovery: 1,
+    Discipline: 1,
+    Skill: 1
+  },
+  debuffs: {
+    'Right Hip (Pubic + Socket)': { healing: 5, max: 100 },
+    'Right Ankle Cyst': { healing: 5, max: 100 },
+    'Hamstrings + Low Back': { healing: 10, max: 100 },
+    'Deep Core + Neck/Jaw': { healing: 10, max: 100 },
+    'Right Rib + Scapula': { healing: 15, max: 100 }
+  },
+  daily: {},
+  metrics: {},
+  weeklyCheckIns: {},
+  proofs: {}
+};
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      state = { ...state, ...saved };
+    }
+  } catch (e) { console.error('Load failed', e); }
+  if (!state.startDate) {
+    state.startDate = new Date().toISOString().slice(0, 10);
+  }
+  save();
+}
+
+function save() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) { console.error('Save failed', e); }
+}
+
+function getCurrentWeek() {
+  const start = new Date(state.startDate);
+  const today = new Date();
+  const diff = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+  return Math.min(12, Math.max(1, Math.floor(diff / 7) + 1));
+}
+
+function getCurrentDay() {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return days[new Date().getDay()];
+}
+
+function todayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+// ========== XP & LEVELING ==========
+function xpForLevel(lvl) {
+  return 100 + (lvl - 1) * 50;
+}
+
+function awardXP(amount, reason) {
+  state.xp += amount;
+  while (state.xp >= xpForLevel(state.level)) {
+    state.xp -= xpForLevel(state.level);
+    state.level++;
+    showToast(`LEVEL UP — Now Level ${state.level}`);
+  }
+  if (reason) showToast(`+${amount} XP — ${reason}`);
+  save();
+  renderCharacter();
+}
+
+function awardStat(statName, amount) {
+  if (state.stats[statName] !== undefined) {
+    state.stats[statName] += amount;
+    save();
+  }
+}
+
+function healDebuff(name, amount) {
+  if (state.debuffs[name]) {
+    state.debuffs[name].healing = Math.min(100, state.debuffs[name].healing + amount);
+    save();
+    renderCharacter();
+  }
+}
+
+// ========== TOAST ==========
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ========== NAV ==========
+function switchView(viewName, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + viewName).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (viewName === 'today') renderToday();
+  if (viewName === 'character') renderCharacter();
+  if (viewName === 'weeks') renderWeeks();
+  if (viewName === 'cheats') renderCheats();
+  if (viewName === 'history') renderHistory();
+  window.scrollTo(0, 0);
+}
+
+// ========== MODAL ==========
+function openModal(html) {
+  document.getElementById('modal-content').innerHTML = html;
+  document.getElementById('modal-bg').classList.add('active');
+}
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('active');
+}
+
+// ========== DATA: PHASES, WEEKS, DAYS ==========
+const PHASES = {
+  1: 'Base · Tissue Tolerance',
+  2: 'Base · Progressive Loading',
+  3: 'Base · Continuous Run Intro',
+  4: 'DELOAD · Reassess (Phase 1 Gate)',
+  5: 'Build · Aerobic Engine',
+  6: 'Build · Volume Up',
+  7: 'Build · Intensity Intro',
+  8: 'DELOAD · Reset (Phase 2 Gate)',
+  9: 'Integration · Specificity',
+  10: 'Integration · Sport Prep',
+  11: 'Integration · Peak Run Build',
+  12: 'GOAL WEEK · 90-Min Run'
+};
+
+// Weekly load progression for the lift days
+const LIFT_LOADS = {
+  1: { gobletSquat: 35, deadlift: 175, rdl: 25, frontSquat: 95, dbBench: 35, dbRow: 35, dbPress: 25 },
+  2: { gobletSquat: 40, deadlift: 195, rdl: 30, frontSquat: 105, dbBench: 40, dbRow: 40, dbPress: 30 },
+  3: { gobletSquat: 45, deadlift: 215, rdl: 35, frontSquat: 115, dbBench: 45, dbRow: 45, dbPress: 30 },
+  4: { gobletSquat: 35, deadlift: 175, rdl: 25, frontSquat: 95, dbBench: 35, dbRow: 35, dbPress: 25 },
+  5: { gobletSquat: 50, deadlift: 230, rdl: 40, frontSquat: 125, dbBench: 50, dbRow: 50, dbPress: 30 },
+  6: { gobletSquat: 50, deadlift: 240, rdl: 40, frontSquat: 130, dbBench: 50, dbRow: 50, dbPress: 35 },
+  7: { gobletSquat: 50, deadlift: 250, rdl: 40, frontSquat: 135, dbBench: 50, dbRow: 50, dbPress: 35 },
+  8: { gobletSquat: 45, deadlift: 215, rdl: 35, frontSquat: 115, dbBench: 45, dbRow: 45, dbPress: 30 },
+  9: { gobletSquat: 55, deadlift: 245, rdl: 45, frontSquat: 140, dbBench: 55, dbRow: 55, dbPress: 35 },
+  10: { gobletSquat: 55, deadlift: 250, rdl: 45, frontSquat: 145, dbBench: 55, dbRow: 55, dbPress: 40 },
+  11: { gobletSquat: 55, deadlift: 250, rdl: 45, frontSquat: 145, dbBench: 55, dbRow: 55, dbPress: 40 },
+  12: { gobletSquat: 45, deadlift: 195, rdl: 35, frontSquat: 95, dbBench: 45, dbRow: 45, dbPress: 25 }
+};
+
+const RUN_PROTOCOLS = {
+  1: { tue: '4 rounds: 4 min run / 1 min walk = 20 min total', sat: '50-min walk/hike with girlfriend (or 25 min run-walk)' },
+  2: { tue: '5 rounds: 4 min run / 1 min walk = 25 min running', sat: '50-min walk/hike (or 25 min run-walk)' },
+  3: { tue: '5 min walk → 20 min CONTINUOUS Zone 2 → 5 min walk', sat: '25-min run continuous if able' },
+  4: { tue: '4 rounds: 4 min run / 1 min walk = 20 min easy. NO Zone 3.', sat: '30-min walk + 15 min mobility' },
+  5: { tue: '5 min walk → 30 min continuous Zone 2 → 5 min walk', sat: '30-min run continuous Zone 2' },
+  6: { tue: '5 min walk → 40 min continuous Zone 2 → 5 min walk', sat: '35-min continuous run' },
+  7: { tue: '10 min easy → 4x (3 min Z3 / 2 min Z2) → 10 min easy', sat: '50-min continuous Zone 2 — longest yet' },
+  8: { tue: '30 min Zone 2 only, no intervals', sat: '40 min Zone 2' },
+  9: { tue: '60 min continuous Zone 2 run', sat: '35-min run with strides (4x 30s pickups in last 5 min)' },
+  10: { tue: '70 min continuous Zone 2', sat: 'MOCK 5K TIME TRIAL — warmup 15, run 5K hard, cooldown 10' },
+  11: { tue: '80 min continuous Zone 2 (fuel at 45 min)', sat: '30-min easy recovery run' },
+  12: { tue: '30 min easy shakeout + 4x 30s strides', sat: '🎯 90-MINUTE CONTINUOUS RUN — GOAL DAY' }
+};
+
+const SOCCER_PROTOCOLS = {
+  1: '15 min: toe taps + sole rolls + cone weave. NO right-foot strikes.',
+  2: '15 min: toe taps + 100 left-foot wall passes + cone weave.',
+  3: '20 min: toe taps + 100 left-foot passes + cone weave. Light L-foot strikes only.',
+  4: '15 min: technique only, no hard strikes.',
+  5: '20 min: toe taps + 100 inside-foot passes both feet at 50% effort.',
+  6: '25 min: R-foot inside passes 75 reps at 60% + cone work.',
+  7: '25 min: First R-foot LACES strikes — stationary ball, 30 reps at 50%.',
+  8: '15 min technique only.',
+  9: '30 min: R-foot laces stationary 50@60%, light running L-foot shots.',
+  10: '30 min scrimmage simulation: 30 min pickup or wall+finishing, full R-foot at 80%.',
+  11: '30 min: full session, pickup-style.',
+  12: '20 min technique (save legs for goal run).'
+};
+
+function getDayPlan(week, day) {
+  const loads = LIFT_LOADS[week] || LIFT_LOADS[1];
+  const runs = RUN_PROTOCOLS[week] || RUN_PROTOCOLS[1];
+  const soccer = SOCCER_PROTOCOLS[week] || SOCCER_PROTOCOLS[1];
+
+  const isDeload = (week === 4 || week === 8);
+  const lowerSets = isDeload ? '2 sets' : '3 sets';
+  const upperSets = isDeload ? '2 sets' : (week >= 5 ? '4 sets' : '3 sets');
+
+  const plans = {
+    Monday: {
+      title: 'Lower-Body Strength + Core',
+      duration: '60 min',
+      intensity: isDeload ? 'RPE 4-5' : (week >= 5 ? 'RPE 6-7' : 'RPE 5-6'),
+      purpose: 'Build hip-tolerant lower body strength, train deep core, attack adductor weakness',
+      warmup: 'A1 (12 min): Foam roller T-spine 8, glutes 60s/side, lats 60s/side · 90/90 hip switches 2 min · Couch stretch 60s/side · Banded ankle DF (right) 60s · Glute bridge 2x10 · BW squat to box 2x8 · Dead bug 2x8/side · Cat-cow + bird dog',
+      main: [
+        `Goblet squat to box (parallel only) — ${lowerSets} x 8 @ ${loads.gobletSquat} lb DB | tempo 3-1-1-1 | rest 90s`,
+        `Conventional deadlift — ${lowerSets} x 5 @ ${loads.deadlift} lb | tempo 2-0-1-0 | rest 2 min`,
+        `DB Romanian deadlift — ${lowerSets} x 10 @ ${loads.rdl} lb each | tempo 3-0-1-0 | rest 60s`,
+        `Copenhagen adductor (modified, top knee on bench) — 2 x 8/side, RIGHT FIRST | rest 60s`,
+        `Pallof press (band, half-kneeling) — 2 x 10/side | rest 45s`
+      ],
+      cooldown: '8 min: 90/90 breathing supine 5 min · Child\'s pose 90s · Figure-4 stretch 60s/side',
+      fueling: 'Pre 6:30am: 1 banana + black coffee. Post 8:15am: B1 Steak & Eggs (640 kcal, 50g P)',
+      vetos: 'DPT veto: stop goblet squat if pubic or hip socket pain >2/10. Substitute split squat (reverse lunge).'
+    },
+    Tuesday: {
+      title: 'Cardio · Run Day',
+      duration: '40-50 min',
+      intensity: 'Zone 2 (140-150 bpm)',
+      purpose: 'Build aerobic engine, run mileage progression toward 90-min goal',
+      warmup: '8 min: Walk 5 min · Leg swings 10/side · Ankle pumps 20/side · Walking lunge 5/side · A-skip 20m x2',
+      main: [runs.tue],
+      cooldown: '12 min: 5 min walk · Standing hamstring stretch 60s/side · Pigeon (right 90s, left 60s — bias right) · 90/90 breathing 3 min',
+      fueling: 'Pre 6:30am: 1 banana + coffee. Intra: water + electrolytes. Post: S3 protein shake within 45 min.',
+      vetos: 'DPT veto: stop intervals if hip pain >3/10 or ankle catching worsens. Switch to walk for remaining time.',
+      armor: 'B-Armor 1 (15 min after): Copenhagen 2x8-12/side · Eccentric heel drop 3x10/side · Tibialis raises 3x15 · SL glute bridge 3x10/side · Pigeon 90s right'
+    },
+    Wednesday: {
+      title: 'Upper-Body Strength + Rib/Scap Focus',
+      duration: '60 min',
+      intensity: isDeload ? 'RPE 4-5' : 'RPE 5-7',
+      purpose: 'Heal right rib/scap pattern, build pulling strength toward unassisted pull-ups',
+      warmup: 'A2 (12 min): Foam roller T-spine 8, lats 60s/side · Wall slides 2x10 · Side-lying open book 5/side slow · Serratus push-up (kneeling) 2x8 · Banded pull-apart 2x15 · Chin nods 2x10 · 360° breathing 2 min',
+      main: [
+        `DB bench press — ${upperSets} x 8 @ ${loads.dbBench} lb each | tempo 3-1-1-0 | rest 90s | Right rib check`,
+        `Single-arm DB row — ${upperSets} x 10/side @ ${loads.dbRow} lb | tempo 2-1-2-0 | rest 60s`,
+        `Half-kneeling DB press — ${upperSets} x 8/side @ ${loads.dbPress} lb | rest 60s`,
+        `Inverted row (suspension) — 3 x AMRAP (stop 2 shy of failure) | rest 90s`,
+        `Prone Y-T-W (no weight) — 2 x 8 each | rest 45s`,
+        `Dead bug — 3 x 8/side | rest 45s`,
+        ...(week >= 3 ? [`Dead hang from pull-up bar — 3 x ${20 + (week-3) * 5}s`] : []),
+        ...(week >= 7 ? ['Band-assisted chin-up — 3 x AMRAP'] : []),
+        ...(week >= 9 ? ['MAX strict pull-ups — 1 attempt'] : [])
+      ],
+      cooldown: '8 min: Lacrosse ball under right pec 60s + right serratus 90s · Thread the needle 60s/side · Diaphragmatic breathing supine 3 min',
+      fueling: 'Same as Monday. Add 15g collagen + 50mg vitamin C 30 min before lifting.',
+      vetos: 'DPT veto: any rib pinch on bench = stop, switch to floor press. Any sharp scap pain on row = drop weight 30%.'
+    },
+    Thursday: {
+      title: 'Yoga + Golf (Recovery Day)',
+      duration: '30-min yoga + golf as leisure',
+      intensity: 'Zone 1',
+      purpose: 'Hip capsule mobility + thoracic rotation + parasympathetic recovery. Golf swing audit.',
+      warmup: '5 min 360° breathing in child\'s pose',
+      main: [
+        'Cat-cow 8 reps',
+        'Low lunge → half splits flow, 5 each side (right side longer)',
+        'Pigeon right 2 min, left 1 min',
+        'Thread the needle 90s/side',
+        'Side-lying open book 8/side',
+        'Bridge with breath hold 5 reps',
+        'Supine spinal twist 90s/side',
+        'Legs up the wall 5 min',
+        'Savasana 3 min',
+        ...(week >= 3 ? ['LIZARD POSE: 90s right, 60s left'] : [])
+      ],
+      cooldown: 'Hydrate well. Walk before golf if possible.',
+      fueling: 'Eat normally — golf is leisure. Hydrate 80 oz minimum.',
+      vetos: 'Golf swing rule: thoracic rotation only, NOT lumbar. If right rib flares, shorten backswing 20%. Driver capped at 70% effort wks 1-4.'
+    },
+    Friday: {
+      title: 'Full-Body Strength + Soccer Skill',
+      duration: '60 min lift + 15-30 min ball',
+      intensity: 'RPE 6-7',
+      purpose: 'Unilateral leg strength, integrated skill development, right-foot striking progression',
+      warmup: 'A1 (12 min) — same as Monday',
+      main: [
+        `Front squat (parallel cap) — 3 x 6 @ ${loads.frontSquat} lb | tempo 3-1-1-0 | rest 90s`,
+        ...(week >= 5
+          ? [`Bulgarian split squat (right leg back FIRST) — 3 x 8/side @ ${week >= 9 ? '35' : (week >= 6 ? '30' : '25')} lb each | rest 60s`]
+          : [`DB step-up (right first, alternating) — 3 x 8/side @ ${week >= 2 ? '30' : '25'} lb each | rest 60s`]),
+        `DB single-arm push press — 3 x 6/side @ ${loads.dbPress} lb | rest 60s`,
+        `Suitcase/farmer carry — 3 x ${30 + week * 3}s @ ${35 + Math.floor(week/3) * 5} lb | rest 45s`,
+        `Side plank with leg lift (right side first) — 2 x ${8 + Math.floor(week/2)}/side | rest 60s`,
+        '— SOCCER BLOCK —',
+        soccer
+      ],
+      cooldown: '8 min: Pigeon, figure-4, 90/90 breathing',
+      fueling: 'Same as Monday. Add electrolytes during soccer block.',
+      armor: 'B-Armor 2 (15 min after): Side-lying open book 8/side · Serratus push-up plus 3x10 · Prone Y-T-W 2x10 · McGill big-3 · Lacrosse ball release map (R scapula border 60s, R upper trap 45s, R rib 4-5 60s, R pec minor 45s)',
+      vetos: 'DPT VETO: NO right-foot striking before Week 5. Period. Inside-foot passes only when introduced. Stop any soccer if right hip pain >3/10.'
+    },
+    Saturday: {
+      title: 'Cardio with Girlfriend',
+      duration: '45-60 min',
+      intensity: 'Zone 1-2',
+      purpose: 'Long aerobic + relationship + recovery-friendly volume',
+      warmup: '5-10 min easy walk',
+      main: [
+        runs.sat,
+        'Built-in mobility 10 min after: Pigeon both sides, supine hamstring nerve glide 10/side, 90/90 breathing'
+      ],
+      cooldown: 'Hydrate, refuel within 45 min',
+      fueling: week >= 7
+        ? 'PRE-LONG-RUN PROTOCOL: Friday dinner = D1 Pasta for glycogen load. 6:30am: banana + 1 tbsp honey + coffee. Intra (>60 min): gel or banana at 45 min mark. Post: S3 shake within 30 min, then full meal.'
+        : 'Pre: small carb snack. Intra: water + electrolytes. Post: S3 shake within 45 min.',
+      vetos: 'Whoop-gated: red recovery = switch to 30 min walk. Yellow = drop intensity 1 RPE.'
+    },
+    Sunday: {
+      title: 'Recovery + Yoga + Food Prep',
+      duration: '20 min yoga + 10 min B-Daily + Prep window',
+      intensity: 'Zone 1 (parasympathetic)',
+      purpose: 'Restore. Cook. Plan the week. Honor the body.',
+      warmup: 'None needed',
+      main: [
+        'Yoga (20 min, parasympathetic theme):',
+        '  Legs up the wall 5 min with 360° breathing',
+        '  Supine bound angle 3 min',
+        '  Spinal twist 2 min/side',
+        '  Reclined pigeon 2 min/side',
+        '  Savasana 4 min',
+        '— FOOD PREP WINDOW —',
+        'Cook 2 proteins (e.g., roast chicken + 1.5 lb ground turkey browned)',
+        'Cook 1 grain (basmati rice or sourdough)',
+        'Roast 2 sheet pans of veg (broccoli + sweet potato; squash + bell pepper)'
+      ],
+      cooldown: 'B-Daily 10-min routine before bed',
+      fueling: 'Plan all meals for the week from your templates. Make a grocery list.',
+      vetos: 'No training intensity today. Walking is fine. The body must rebuild.'
+    }
+  };
+  return plans[day] || plans.Sunday;
+}
+
+// ========== TODAY VIEW ==========
+const B_DAILY = [
+  { name: '90/90 hip switches', detail: '2 min — right hip capsule + IR/ER' },
+  { name: 'Couch stretch', detail: '60s/side — hip flexor, anterior pelvic tilt' },
+  { name: 'Banded ankle dorsiflexion (right)', detail: '60s — cyst-friendly, no end-range force' },
+  { name: 'Foam roller T-spine extensions', detail: '8 reps — rib mobility' },
+  { name: 'Wall slides', detail: '2x10 — serratus + scapula' },
+  { name: 'Dead bug', detail: '2x8/side — deep core, anti-extension' },
+  { name: 'Chin nods', detail: '2x10 — deep neck flexors, TMJ relief' },
+  { name: 'Jaw release', detail: '60s — tongue to roof, jaw soft, 6 nasal breaths' },
+  { name: '360° breathing supine', detail: '2 min — diaphragm + pelvic floor + thoracic' }
+];
+
+const METRICS = [
+  { key: 'sleep', label: 'Sleep (hours)', min: 0, max: 12, step: 0.25, suffix: 'h', default: 7 },
+  { key: 'rpe', label: 'Session RPE (1-10)', min: 0, max: 10, step: 1, suffix: '', default: 5 },
+  { key: 'hip', label: 'Right Hip Pain (0-10)', min: 0, max: 10, step: 1, suffix: '/10', default: 0 },
+  { key: 'ankle', label: 'Right Ankle Pain (0-10)', min: 0, max: 10, step: 1, suffix: '/10', default: 0 },
+  { key: 'back', label: 'Low Back AM Stiffness (0-10)', min: 0, max: 10, step: 1, suffix: '/10', default: 0 }
+];
+
+function renderToday() {
+  const week = getCurrentWeek();
+  const day = getCurrentDay();
+  const phase = PHASES[week] || PHASES[1];
+  const plan = getDayPlan(week, day);
+
+  document.getElementById('today-phase').textContent = phase;
+  document.getElementById('today-week').textContent = `Week ${week} · ${day}`;
+
+  const dayKey = todayKey();
+  const todayState = state.daily[dayKey] || { bDaily: [], main: [] };
+
+  let html = '';
+
+  // Main quest card
+  html += `
+    <div class="quest-card">
+      <div class="quest-meta">
+        <span class="quest-tag">Main Quest</span>
+        <span>${plan.duration}</span>
+        <span>${plan.intensity}</span>
+      </div>
+      <div class="quest-name">${plan.title}</div>
+      <div class="quest-desc">${plan.purpose}</div>
+      <div class="quest-xp">+50 XP on completion</div>
+      <div class="card-section-title">Warmup</div>
+      <div style="font-size: 12px; color: var(--text-dim); line-height: 1.5;">${plan.warmup}</div>
+      <div class="card-section-title">Main Work</div>
+      <div class="checklist">
+        ${plan.main.map((item, i) => {
+          const done = (todayState.main || []).includes(i);
+          return `<div class="check-item ${done ? 'done' : ''}" onclick="toggleMain(${i})">
+            <div class="check-box"></div>
+            <div class="check-text">${item}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="card-section-title">Cooldown</div>
+      <div style="font-size: 12px; color: var(--text-dim); line-height: 1.5;">${plan.cooldown}</div>
+      ${plan.armor ? `<div class="card-section-title">Bonus: B-Armor</div><div style="font-size: 12px; color: var(--text-dim); line-height: 1.5;">${plan.armor}</div>` : ''}
+      <div class="card-section-title">Fueling</div>
+      <div style="font-size: 12px; color: var(--text-dim); line-height: 1.5;">${plan.fueling}</div>
+      ${plan.vetos ? `<div class="card-section-title" style="color: var(--red);">DPT Notes</div><div style="font-size: 12px; color: var(--text); line-height: 1.5; padding: 8px; background: rgba(201,93,93,0.05); border-left: 2px solid var(--red); border-radius: 4px;">${plan.vetos}</div>` : ''}
+
+      ${renderProofZone('main_' + dayKey)}
+
+      <button class="btn btn-primary" onclick="completeMainQuest()">Mark Quest Complete (+50 XP)</button>
+    </div>
+  `;
+
+  // B-Daily card
+  html += `
+    <div class="quest-card">
+      <div class="quest-meta">
+        <span class="quest-tag">Daily Ritual</span>
+        <span>10 min</span>
+      </div>
+      <div class="quest-name">B-Daily Bulletproofing</div>
+      <div class="quest-desc">Non-negotiable. Every day. Heals all five wounds slowly. The foundation of all other gains.</div>
+      <div class="quest-xp">+15 XP on completion · +1 healing on each debuff</div>
+      <div class="checklist">
+        ${B_DAILY.map((item, i) => {
+          const done = (todayState.bDaily || []).includes(i);
+          return `<div class="check-item ${done ? 'done' : ''}" onclick="toggleBDaily(${i})">
+            <div class="check-box"></div>
+            <div>
+              <div class="check-text">${item.name}</div>
+              <div class="check-detail">${item.detail}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      ${renderProofZone('bdaily_' + dayKey)}
+      <button class="btn btn-primary" onclick="completeBDaily()">Complete Ritual (+15 XP)</button>
+    </div>
+  `;
+
+  // Meals card
+  html += `
+    <div class="quest-card">
+      <div class="quest-meta">
+        <span class="quest-tag">Provisioning</span>
+        <span>Photo proof = XP</span>
+      </div>
+      <div class="quest-name">Today's Meals</div>
+      <div class="quest-desc">Snap a photo of each meal. The chef's eye remembers what the body learns.</div>
+      <div class="quest-xp">+10 XP per meal photo logged</div>
+      ${renderMealZone('breakfast', 'Breakfast')}
+      ${renderMealZone('lunch', 'Lunch')}
+      ${renderMealZone('dinner', 'Dinner')}
+      ${renderMealZone('snack', 'Snack / Treat')}
+    </div>
+  `;
+
+  document.getElementById('today-content').innerHTML = html;
+
+  // Metric sliders
+  let metricsHtml = '';
+  const todayMetrics = state.metrics[dayKey] || {};
+  METRICS.forEach(m => {
+    const v = todayMetrics[m.key] !== undefined ? todayMetrics[m.key] : m.default;
+    metricsHtml += `
+      <div class="metric-row">
+        <div class="metric-label">
+          <span class="metric-name">${m.label}</span>
+          <span class="metric-value" id="metric-${m.key}-val">${v}${m.suffix}</span>
+        </div>
+        <input type="range" min="${m.min}" max="${m.max}" step="${m.step}" value="${v}" id="metric-${m.key}" oninput="updateMetricLabel('${m.key}', this.value, '${m.suffix}')">
+      </div>
+    `;
+  });
+  document.getElementById('metric-sliders').innerHTML = metricsHtml;
+}
+
+function updateMetricLabel(key, val, suffix) {
+  document.getElementById(`metric-${key}-val`).textContent = val + suffix;
+}
+
+function renderProofZone(id) {
+  const proof = state.proofs[id];
+  if (proof && proof.image) {
+    return `<div class="proof-zone has-photo" onclick="document.getElementById('file-${id}').click()">
+      <img src="${proof.image}" alt="proof">
+    </div>
+    <input type="file" id="file-${id}" accept="image/*" capture onchange="handlePhoto('${id}', this)">`;
+  }
+  return `<div class="proof-zone" onclick="document.getElementById('file-${id}').click()">
+    <div class="proof-text-strong">Photo Proof</div>
+    <div class="proof-text">Tap to attach a photo (optional, but +10 XP)</div>
+  </div>
+  <input type="file" id="file-${id}" accept="image/*" capture onchange="handlePhoto('${id}', this)">`;
+}
+
+function renderMealZone(slot, label) {
+  const id = `meal_${slot}_${todayKey()}`;
+  const proof = state.proofs[id];
+  let html = `<div class="card-section-title">${label}</div>`;
+  if (proof && proof.image) {
+    html += `<div class="proof-zone has-photo" onclick="document.getElementById('file-${id}').click()">
+      <img src="${proof.image}" alt="${label}">
+    </div>`;
+  } else {
+    html += `<div class="proof-zone" onclick="document.getElementById('file-${id}').click()">
+      <div class="proof-text-strong">Snap ${label}</div>
+      <div class="proof-text">+10 XP · The codex remembers the chef's work</div>
+    </div>`;
+  }
+  html += `<input type="file" id="file-${id}" accept="image/*" capture onchange="handleMealPhoto('${slot}', this)">`;
+  return html;
+}
+
+function handlePhoto(id, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    // Compress by drawing to canvas
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const maxW = 800;
+      const ratio = Math.min(maxW / img.width, maxW / img.height, 1);
+      canvas.width = img.width * ratio;
+      canvas.height = img.height * ratio;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+
+      const wasNew = !state.proofs[id];
+      state.proofs[id] = { image: dataUrl, time: Date.now() };
+      save();
+      if (wasNew) awardXP(10, 'Photo proof recorded');
+      renderToday();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleMealPhoto(slot, input) {
+  const id = `meal_${slot}_${todayKey()}`;
+  handlePhoto(id, input);
+  awardStat('Discipline', 0.1);
+}
+
+function toggleBDaily(i) {
+  const dayKey = todayKey();
+  if (!state.daily[dayKey]) state.daily[dayKey] = { bDaily: [], main: [] };
+  if (!state.daily[dayKey].bDaily) state.daily[dayKey].bDaily = [];
+  const idx = state.daily[dayKey].bDaily.indexOf(i);
+  if (idx >= 0) state.daily[dayKey].bDaily.splice(idx, 1);
+  else state.daily[dayKey].bDaily.push(i);
+  save();
+  renderToday();
+}
+
+function toggleMain(i) {
+  const dayKey = todayKey();
+  if (!state.daily[dayKey]) state.daily[dayKey] = { bDaily: [], main: [] };
+  if (!state.daily[dayKey].main) state.daily[dayKey].main = [];
+  const idx = state.daily[dayKey].main.indexOf(i);
+  if (idx >= 0) state.daily[dayKey].main.splice(idx, 1);
+  else state.daily[dayKey].main.push(i);
+  save();
+  renderToday();
+}
+
+function completeBDaily() {
+  const dayKey = todayKey();
+  if (state.daily[dayKey] && state.daily[dayKey].bDailyDone) {
+    showToast('Already completed today.');
+    return;
+  }
+  if (!state.daily[dayKey]) state.daily[dayKey] = { bDaily: [], main: [] };
+  state.daily[dayKey].bDailyDone = true;
+  state.daily[dayKey].bDaily = B_DAILY.map((_, i) => i);
+  Object.keys(state.debuffs).forEach(d => healDebuff(d, 1));
+  awardStat('Mobility', 0.2);
+  awardStat('Recovery', 0.2);
+  awardStat('Discipline', 0.3);
+  awardXP(15, 'B-Daily complete · all wounds healing');
+  renderToday();
+}
+
+function completeMainQuest() {
+  const dayKey = todayKey();
+  if (state.daily[dayKey] && state.daily[dayKey].mainDone) {
+    showToast('Already completed today.');
+    return;
+  }
+  if (!state.daily[dayKey]) state.daily[dayKey] = { bDaily: [], main: [] };
+  state.daily[dayKey].mainDone = true;
+
+  // Stat awards by day
+  const day = getCurrentDay();
+  if (day === 'Monday' || day === 'Friday') {
+    awardStat('Strength', 0.5);
+    awardStat('Discipline', 0.3);
+  } else if (day === 'Tuesday' || day === 'Saturday') {
+    awardStat('Endurance', 0.5);
+    awardStat('Discipline', 0.3);
+    healDebuff('Right Hip (Pubic + Socket)', 1);
+  } else if (day === 'Wednesday') {
+    awardStat('Strength', 0.4);
+    healDebuff('Right Rib + Scapula', 1);
+  } else if (day === 'Thursday') {
+    awardStat('Mobility', 0.5);
+    awardStat('Recovery', 0.3);
+    healDebuff('Right Hip (Pubic + Socket)', 1);
+    healDebuff('Right Rib + Scapula', 1);
+  } else if (day === 'Friday') {
+    awardStat('Skill', 0.5);
+  } else if (day === 'Sunday') {
+    awardStat('Recovery', 0.5);
+    awardStat('Discipline', 0.3);
+  }
+
+  awardXP(50, 'Main quest complete');
+  renderToday();
+}
+
+function saveMetrics() {
+  const dayKey = todayKey();
+  const m = {};
+  METRICS.forEach(metric => {
+    const el = document.getElementById('metric-' + metric.key);
+    if (el) m[metric.key] = parseFloat(el.value);
+  });
+  m.timestamp = Date.now();
+  state.metrics[dayKey] = m;
+  save();
+  awardXP(5, 'Daily metrics inscribed');
+  showToast('Today\'s record inscribed.');
+}
+
+// ========== CHARACTER ==========
+function renderCharacter() {
+  document.getElementById('char-name-display').textContent = state.identity.name;
+  document.getElementById('char-class-display').textContent = state.identity.class;
+  document.getElementById('char-level-display').textContent = `Level ${state.level}`;
+  document.getElementById('char-name-input').value = state.identity.name;
+  document.getElementById('char-class-input').value = state.identity.class;
+
+  const xpNeeded = xpForLevel(state.level);
+  const pct = Math.min(100, Math.round((state.xp / xpNeeded) * 100));
+  document.getElementById('xp-text').textContent = `${Math.round(state.xp)} / ${xpNeeded} XP`;
+  document.getElementById('xp-fill').style.width = pct + '%';
+
+  const statsHtml = Object.entries(state.stats).map(([k, v]) => `
+    <div class="stat">
+      <span class="stat-label">${k}</span>
+      <span class="stat-value">${Math.round(v * 10) / 10}</span>
+    </div>
+  `).join('');
+  document.getElementById('stats-grid').innerHTML = statsHtml;
+
+  const debuffsHtml = Object.entries(state.debuffs).map(([k, v]) => `
+    <div class="debuff">
+      <div class="debuff-name">${k}</div>
+      <div class="debuff-bar-wrap">
+        <div class="debuff-bar"><div class="debuff-bar-fill" style="width: ${v.healing}%; background: ${v.healing >= 80 ? 'var(--green)' : v.healing >= 40 ? 'var(--yellow)' : 'var(--red)'};"></div></div>
+        <div class="debuff-bar-label">
+          <span>${v.healing >= 100 ? 'Healed' : v.healing >= 80 ? 'Mostly healed' : v.healing >= 50 ? 'Healing' : v.healing >= 20 ? 'Tender' : 'Active'}</span>
+          <span>${Math.round(v.healing)}%</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('debuffs').innerHTML = debuffsHtml;
+}
+
+function saveIdentity() {
+  state.identity.name = document.getElementById('char-name-input').value || 'Unnamed Adventurer';
+  state.identity.class = document.getElementById('char-class-input').value;
+  save();
+  renderCharacter();
+  showToast('Identity recorded.');
+}
+
+// ========== WEEKS ==========
+function renderWeeks() {
+  const currentWeek = getCurrentWeek();
+  const html = Array.from({ length: 12 }, (_, i) => {
+    const w = i + 1;
+    const phase = PHASES[w].split('·')[0].trim();
+    const isDeload = w === 4 || w === 8;
+    const isGoal = w === 12;
+    const isCurrent = w === currentWeek;
+    const cls = `week-card ${isCurrent ? 'current' : ''} ${isDeload ? 'deload' : ''} ${isGoal ? 'goal' : ''}`;
+    return `<div class="${cls}" onclick="showWeekDetail(${w})">
+      <div class="week-num">Week ${w}</div>
+      <div class="week-phase">${phase}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('week-grid').innerHTML = html;
+}
+
+function showWeekDetail(w) {
+  const phase = PHASES[w];
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  let dayContent = days.map((d, i) => {
+    const plan = getDayPlan(w, d);
+    return `<div id="wd-${w}-${i}" class="day-content" style="display: ${i === 1 ? 'block' : 'none'};">
+      <div class="quest-meta" style="margin-bottom: 12px;">
+        <span class="quest-tag">${d}</span>
+        <span>${plan.duration}</span>
+        <span>${plan.intensity}</span>
+      </div>
+      <div class="quest-name" style="margin-bottom: 8px;">${plan.title}</div>
+      <div class="quest-desc">${plan.purpose}</div>
+      <div class="card-section-title">Warmup</div>
+      <div style="font-size: 12px; color: var(--text-dim);">${plan.warmup}</div>
+      <div class="card-section-title">Main Work</div>
+      <ul style="list-style: none; padding-left: 0;">
+        ${plan.main.map(m => `<li style="padding: 6px 0 6px 16px; border-bottom: 1px solid var(--border); position: relative; font-size: 13px;"><span style="position:absolute;left:0;color:var(--gold-dim);">◆</span>${m}</li>`).join('')}
+      </ul>
+      <div class="card-section-title">Cooldown</div>
+      <div style="font-size: 12px; color: var(--text-dim);">${plan.cooldown}</div>
+      ${plan.armor ? `<div class="card-section-title">B-Armor</div><div style="font-size: 12px; color: var(--text-dim);">${plan.armor}</div>` : ''}
+      <div class="card-section-title">Fueling</div>
+      <div style="font-size: 12px; color: var(--text-dim);">${plan.fueling}</div>
+      ${plan.vetos ? `<div class="card-section-title" style="color: var(--red);">DPT Notes</div><div style="font-size: 12px; padding: 8px; background: rgba(201,93,93,0.05); border-left: 2px solid var(--red); border-radius: 4px;">${plan.vetos}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  const html = `
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <div>
+          <div class="card-title" style="border: none; padding: 0; margin: 0;">Week ${w}</div>
+          <div style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">${phase}</div>
+        </div>
+        <button class="btn btn-sm" onclick="document.getElementById('week-detail').style.display='none'">Close</button>
+      </div>
+      <div class="day-tabs">
+        ${days.map((d, i) => `<div class="day-tab ${i === 1 ? 'active' : ''}" onclick="showDayContent(${w}, ${i}, this)">${d.slice(0, 3)}</div>`).join('')}
+      </div>
+      ${dayContent}
+    </div>
+  `;
+  const dest = document.getElementById('week-detail');
+  dest.innerHTML = html;
+  dest.style.display = 'block';
+  dest.scrollIntoView({ behavior: 'smooth' });
+}
+
+function showDayContent(w, i, btn) {
+  document.querySelectorAll('#week-detail .day-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#week-detail .day-content').forEach(d => d.style.display = 'none');
+  document.getElementById(`wd-${w}-${i}`).style.display = 'block';
+}
+
+// ========== CHEAT SHEETS ==========
+const CHEATS = {
+  bdaily: {
+    name: 'B-Daily 10-Min Routine',
+    desc: 'The non-negotiable daily ritual',
+    content: `
+      <h3>The Nine Movements</h3>
+      <p>Every day. 10 minutes. Heals all five wounds.</p>
+      <ul>
+        <li><strong>1. 90/90 hip switches</strong> — 2 min · right hip capsule + IR/ER</li>
+        <li><strong>2. Couch stretch</strong> — 60s/side · hip flexor, anterior pelvic tilt</li>
+        <li><strong>3. Banded ankle dorsiflexion (right)</strong> — 60s · cyst-friendly, no end-range force</li>
+        <li><strong>4. Foam roller T-spine extensions</strong> — 8 reps · rib mobility</li>
+        <li><strong>5. Wall slides</strong> — 2x10 · serratus + scapula</li>
+        <li><strong>6. Dead bug</strong> — 2x8/side · deep core, anti-extension</li>
+        <li><strong>7. Chin nods</strong> — 2x10 · deep neck flexors, TMJ relief</li>
+        <li><strong>8. Jaw release</strong> — 60s · tongue to roof, jaw soft, 6 nasal breaths</li>
+        <li><strong>9. 360° breathing supine</strong> — 2 min · diaphragm + pelvic floor + thoracic</li>
+      </ul>
+      <h3>B-Armor 1 (Tuesday, after run)</h3>
+      <ul>
+        <li>Copenhagen adductor — 2x8-12/side</li>
+        <li>Eccentric heel drop off step — 3x10/side</li>
+        <li>Tibialis raises — 3x15</li>
+        <li>Single-leg glute bridge — 3x10/side</li>
+        <li>Pigeon — 90s right, 60s left</li>
+      </ul>
+      <h3>B-Armor 2 (Friday, after lift)</h3>
+      <ul>
+        <li>Side-lying open book — 8/side</li>
+        <li>Serratus push-up plus — 3x10</li>
+        <li>Prone Y-T-W — 2x10 each</li>
+        <li>McGill big-3: curl-up 3x10s, side plank 30s/side, bird dog 8/side</li>
+        <li>Lacrosse ball: R scapula border 60s, R upper trap 45s, R rib 4-5 60s, R pec minor 45s</li>
+      </ul>
+    `
+  },
+  traffic: {
+    name: 'Pain Traffic Light + Flare Protocols',
+    desc: 'What to do when something hurts',
+    content: `
+      <h3>The Three Lights</h3>
+      <div class="traffic-row">
+        <div class="traffic-cell traffic-green">
+          <div class="traffic-label">Green</div>
+          <div class="traffic-text">≤3/10 during, baseline within 24h. Continue as planned.</div>
+        </div>
+      </div>
+      <div class="traffic-row">
+        <div class="traffic-cell traffic-yellow">
+          <div class="traffic-label">Yellow</div>
+          <div class="traffic-text">4-5/10 or lingering >24h. Reduce load 30%, shorten ROM, swap aggravator.</div>
+        </div>
+      </div>
+      <div class="traffic-row">
+        <div class="traffic-cell traffic-red">
+          <div class="traffic-label">Red</div>
+          <div class="traffic-text">≥6/10 or sharp/new pain. Stop session. Replace with B-Daily + walk. 48h not resolved = clinician.</div>
+        </div>
+      </div>
+
+      <h3>Hip Flare Swap-In</h3>
+      <ul>
+        <li>30 min walk + B-Daily</li>
+        <li>Copenhagen iso holds — 5x15s</li>
+        <li>90/90 breathing 5 min</li>
+        <li><strong>NO</strong> squatting or running</li>
+      </ul>
+
+      <h3>Ankle Flare Swap-In</h3>
+      <ul>
+        <li>Upper-body lift only</li>
+        <li>20 min stationary cycling (or extra mobility)</li>
+        <li>Tibialis + calf eccentrics</li>
+        <li>Ankle circles in pain-free range only</li>
+      </ul>
+
+      <h3>Low Back Flare Swap-In</h3>
+      <ul>
+        <li>McGill big-3 only</li>
+        <li>Walk + supine hamstring nerve glide</li>
+        <li><strong>NO</strong> deadlift, RDL, or loaded hinge until 48h pain-free</li>
+      </ul>
+
+      <h3>Rib/Scap Knot Flare Swap-In</h3>
+      <ul>
+        <li>Lower-body lift only (skip pressing/pulling)</li>
+        <li>B-Armor 2 + lacrosse ball release</li>
+        <li>Thoracic mobility · massage if available</li>
+      </ul>
+
+      <h3>Whoop Recovery Rules</h3>
+      <ul>
+        <li><strong>Green (66+):</strong> Plan as written</li>
+        <li><strong>Yellow (34-65):</strong> Drop 1 set per main lift, drop intensity 1 RPE on cardio</li>
+        <li><strong>Red (<34):</strong> Replace lift with B-Daily + 30 min walk; replace cardio with 30 min yoga</li>
+        <li><strong>Two reds in a row:</strong> Full off day. Sleep, hydrate, eat real dinner.</li>
+      </ul>
+
+      <h3>Red Flag Escalation</h3>
+      <ul>
+        <li>Bowel/bladder symptoms, foot weakness, spreading numbness → ER same day</li>
+        <li>Hip pain at rest, pain w/ cough/sneeze → sports med MD this week</li>
+        <li>Ankle cyst growing/red/sharp → primary care or podiatrist</li>
+        <li>Rib sharp w/ breathing >3 days → primary care</li>
+        <li>Headaches changing pattern, vision symptoms → primary care</li>
+      </ul>
+    `
+  },
+  fueling: {
+    name: 'Pre/Post Fueling Card',
+    desc: 'What to eat when',
+    content: `
+      <h3>Daily Targets</h3>
+      <ul>
+        <li><strong>Training day:</strong> 2,650 kcal · 200g P · 280g C · 80g F</li>
+        <li><strong>Rest day:</strong> 2,500 kcal · 180g P · 250g C · 75g F</li>
+      </ul>
+
+      <h3>Pre-Training (7am sessions)</h3>
+      <ul>
+        <li>6:30am: 1 banana + black coffee (small)</li>
+        <li>If lifting: add 15g collagen + 50mg vitamin C 30 min before</li>
+      </ul>
+
+      <h3>Post-Training Window (within 60 min)</h3>
+      <ul>
+        <li><strong>Lift days:</strong> B1 Steak & Eggs Bowl (640 kcal, 50g P)</li>
+        <li><strong>Run days:</strong> S3 protein shake within 45 min, then full meal within 90</li>
+      </ul>
+
+      <h3>Race / Match / Long Run Day</h3>
+      <ul>
+        <li>2 hours before: 1 banana + 2 tbsp peanut butter + black coffee + water</li>
+        <li>30 min before: 1 medjool date or ½ banana</li>
+        <li>During (>60 min effort): 1 gel or ½ banana per 45 min · 16 oz electrolyte/hour</li>
+        <li>Within 30 min after: S3 shake</li>
+        <li>Within 90 min after: Full meal (B1 or D1)</li>
+      </ul>
+
+      <h3>Meal Templates (built from your foods)</h3>
+      <ul>
+        <li><strong>B1 Steak & Eggs:</strong> 4oz steak, 3 eggs, ½ cup sweet potato, 1 cup berries · 640/50P/45C/28F · 12 min</li>
+        <li><strong>B2 Sausage Egg Bagel:</strong> 2 chicken-apple sausages, 2 eggs, swiss, bagel, pineapple · 720/42P/65C/30F · 10 min</li>
+        <li><strong>B3 Chef's Oats:</strong> Oats, walnuts, pumpkin seeds, chia, banana, berries, Truvani · 640/38P/80C/20F · 8 min</li>
+        <li><strong>L1 Chef Sandwich:</strong> Dave's bread, 5oz chicken, avo, tomato, spinach, swiss · 720/50P/75C/25F</li>
+        <li><strong>L2 Power Bowl:</strong> Basmati, 6oz turkey, beans, peppers, avo · 700/50P/90C/18F</li>
+        <li><strong>L3 Cod & Veg:</strong> 6oz cod, broccoli, carrots, sweet potato, salad · 580/40P/50C/22F</li>
+        <li><strong>D1 Chef's Pasta:</strong> 4oz WW pasta, 5oz beef, San Marzanos, parm, salad · 780/45P/90C/25F</li>
+        <li><strong>D2 Soup & Bread:</strong> Chicken-veg soup, sourdough w/ butter, berries · 640/50P/70C/18F</li>
+        <li><strong>D3 Meat & Veg Plate:</strong> 6oz protein, squash, green beans, baked potato · 700/50P/60C/28F</li>
+        <li><strong>S1:</strong> 2 tbsp PB + ½ banana on rice cake · 280 kcal</li>
+        <li><strong>S2:</strong> 1oz walnuts + 1oz dark chocolate + grapes · 320 kcal</li>
+        <li><strong>S3:</strong> Truvani + banana + PB + lactose-free milk · 350 kcal · 25g P</li>
+      </ul>
+
+      <h3>Treat Schedule (built in, not eliminated)</h3>
+      <ul>
+        <li><strong>Saturday night:</strong> ½ pint lactose-free ice cream OR 1 glass red wine. Pick one.</li>
+        <li><strong>Wednesday:</strong> 2 squares 70%+ dark chocolate after dinner</li>
+        <li><strong>Sunday:</strong> One candy item (Skittles, oatmeal cream pie, Twizzlers) — eaten AFTER a meal</li>
+      </ul>
+
+      <h3>Hydration & Supplements</h3>
+      <ul>
+        <li>100 oz water/day base · +20 oz per training hour</li>
+        <li>Electrolytes (LMNT or 1g Na + 200mg K + 100mg Mg in 16oz) intra-training</li>
+        <li>Algae oil 600mg EPA+DHA daily</li>
+        <li>Vitamin D3 2000 IU/day</li>
+        <li>Magnesium glycinate 300mg before bed</li>
+        <li>Creatine 5g/day (any clean brand)</li>
+        <li>Collagen 15g + vitamin C before lifting</li>
+      </ul>
+
+      <h3>Restaurant Defaults</h3>
+      <ul>
+        <li><strong>Italian:</strong> Grilled chicken/steak + side pasta marinara + veg + salad. Skip cream sauces.</li>
+        <li><strong>Japanese:</strong> Sashimi or grilled fish + rice + edamame + miso. Skip mayo rolls.</li>
+        <li><strong>Mexican:</strong> Carne asada + rice + beans + corn tortillas + guac. Skip queso.</li>
+        <li><strong>Comfort:</strong> Burger (no cheese unless aged) + side salad/fruit 4/5 times.</li>
+      </ul>
+    `
+  },
+  grocery: {
+    name: 'Weekly Grocery List',
+    desc: 'Tap to check off as you shop',
+    content: ''  // Special render
+  },
+  weeks: {
+    name: 'Weekly Schedule At-A-Glance',
+    desc: 'Repeats every week with progression',
+    content: `
+      <h3>The Fixed Weekly Pattern</h3>
+      <ul>
+        <li><strong>Monday 7am</strong> — Lower-body strength + core (60 min)</li>
+        <li><strong>Tuesday 7am</strong> — Run day (40-90 min, progressing)</li>
+        <li><strong>Wednesday 7am</strong> — Upper-body strength + rib/scap (60 min)</li>
+        <li><strong>Thursday</strong> — Yoga 30 min + golf (recovery day)</li>
+        <li><strong>Friday 7am</strong> — Full-body + soccer skill (60 + 15-30 min)</li>
+        <li><strong>Saturday</strong> — Cardio with girlfriend (45-60 min)</li>
+        <li><strong>Sunday</strong> — Recovery yoga 20 min + B-Daily + food prep</li>
+      </ul>
+
+      <h3>What Changes Each Week</h3>
+      <ul>
+        <li><strong>Strength load</strong> — progresses ~5-10% each non-deload week</li>
+        <li><strong>Run volume</strong> — builds from 20 min to 90 min continuous</li>
+        <li><strong>Soccer striking</strong> — capped at zero R-foot Wks 1-4, full Wk 9+</li>
+        <li><strong>Yoga depth</strong> — adds lizard pose Wk 3+, longer holds in deload weeks</li>
+      </ul>
+
+      <h3>The Phase Map</h3>
+      <ul>
+        <li><strong>Wks 1-3 Base:</strong> Tissue tolerance, no PRs, prove the body responds</li>
+        <li><strong>Wk 4 Deload + Gate:</strong> Half volume, full reassess</li>
+        <li><strong>Wks 5-7 Build:</strong> Aerobic engine, strength up, intensity intro</li>
+        <li><strong>Wk 8 Deload + Gate:</strong> Reset before peak</li>
+        <li><strong>Wks 9-11 Integration:</strong> Specificity, soccer ramp, peak run build</li>
+        <li><strong>Wk 12 Goal:</strong> 90-min continuous run</li>
+      </ul>
+    `
+  },
+  injury: {
+    name: 'Injury Management Map',
+    desc: 'Each wound, named protocol, expected trajectory',
+    content: `
+      <h3>Right Hip (Pubic + Socket)</h3>
+      <p><strong>Hypothesis:</strong> Suspected athletic pubalgia / FAI overlap. Adductor weakness + hip flexor tightness + anterior pelvic tilt.</p>
+      <ul>
+        <li><strong>Daily:</strong> 90/90 hip switches 2 min · Couch stretch 60s/side · Glute bridge 2x15</li>
+        <li><strong>Weekly:</strong> Copenhagen 2x/wk progressive · Lateral band walks 3x/wk · Dead bug 3x/wk</li>
+        <li><strong>Red flags:</strong> Pain >5/10 walking, groin pain at rest, sharp socket catch, pain w/ cough</li>
+        <li><strong>Trajectory:</strong> Wks 1-4 pain ↓ to ≤2/10 in deep squat. Wks 5-8 parallel squat unloaded. Wks 9-12 light R-foot striking pain-free.</li>
+      </ul>
+
+      <h3>Right Ankle Dorsal Cyst</h3>
+      <p><strong>Hypothesis:</strong> Mechanical irritation at talar neck/anterior capsule from dorsiflexion compression. Clicking suggests joint capsule involvement.</p>
+      <ul>
+        <li><strong>Daily:</strong> Banded DF 60s · Towel scrunches 30 reps · Calf raises 2x15 SL</li>
+        <li><strong>Weekly:</strong> Tibialis raises 3x/wk · Eccentric heel drops 3x/wk · Knee-to-wall measure 1x/wk</li>
+        <li><strong>Red flags:</strong> Sudden size increase, redness/heat, sharp WB pain, foot numbness</li>
+        <li><strong>Trajectory:</strong> Wks 1-4 cyst stable or shrinks, clicking ↓. Wks 5-8 DF within 70-80% of L. Wks 9-12 tolerate running and cuts pain-free.</li>
+      </ul>
+
+      <h3>Hamstrings + Low Back (R-leg tingle)</h3>
+      <p><strong>Hypothesis:</strong> Anterior pelvic tilt + neural tension (femoral or L4 root irritation), tight hip flexors, weak posterior chain.</p>
+      <ul>
+        <li><strong>Daily:</strong> McGill big-3 · Supine hamstring nerve glide 10/side</li>
+        <li><strong>Weekly:</strong> RDL 1x/wk · Nordic curl progression 1x/wk · Cat-cow + thread the needle</li>
+        <li><strong>Red flags:</strong> Tingling worsens, shooting to foot, foot/leg weakness, bowel/bladder change</li>
+        <li><strong>Trajectory:</strong> Wks 1-4 tingle frequency ↓50%. Wks 5-8 PM stiffness <2/10. Wks 9-12 full RDL volume pain-free.</li>
+      </ul>
+
+      <h3>Deep Core + Neck (TMJ, headaches)</h3>
+      <p><strong>Hypothesis:</strong> Diaphragm-pelvic floor disconnect, deep neck flexor weakness, upper trap dominance, jaw clenching.</p>
+      <ul>
+        <li><strong>Daily:</strong> 360° breathing 5 min · Chin nods 2x10 · Jaw release 60s</li>
+        <li><strong>Weekly:</strong> Dead bug 3x/wk · Pallof 3x/wk · Y-T-W 2x/wk</li>
+        <li><strong>Red flags:</strong> Headache pattern changes, vision changes, jaw locks, neck radicular</li>
+        <li><strong>Trajectory:</strong> Wks 1-4 morning jaw tension ↓. Wks 5-8 headache frequency ↓. Wks 9-12 60s plank w/ neutral neck pain-free.</li>
+      </ul>
+
+      <h3>Right Rib + Scapula</h3>
+      <p><strong>Hypothesis:</strong> Costovertebral joint stiffness, serratus inhibition, thoracic extension deficit.</p>
+      <ul>
+        <li><strong>Daily:</strong> Foam roller T-spine 8 reps · Wall slides 2x10 · Side-lying open book 5/side</li>
+        <li><strong>Weekly:</strong> Serratus push-up 3x/wk · Dead hang progression 3x/wk · Lacrosse ball release 2x/wk</li>
+        <li><strong>Red flags:</strong> Sharp rib pain w/ breathing, cardiac-like pain, persistent pop w/ pain, arm numbness</li>
+        <li><strong>Trajectory:</strong> Wks 1-4 knot recurrence ↓50%. Wks 5-8 full overhead reach pain-free. Wks 9-12 freestyle/throwing pain-free.</li>
+      </ul>
+    `
+  }
+};
+
+const GROCERY_LIST = {
+  'Proteins': [
+    '2 lb sirloin or strip steak',
+    '2 lb chicken breast or thigh',
+    '1.5 lb ground turkey',
+    '1 lb ground beef 90/10',
+    '1 lb cod',
+    '6 oz salmon (when in rotation)',
+    '2 dozen eggs',
+    '1 lb chicken-apple breakfast sausage'
+  ],
+  'Grains & Starch': [
+    'Basmati rice 2 lb',
+    'Whole wheat pasta 1 lb',
+    'Sourdough loaf',
+    'Whole wheat bagels (4-pack)',
+    "Dave's Killer white bread",
+    'Rolled oats 1 lb'
+  ],
+  'Vegetables': [
+    'Broccoli (2 heads)',
+    'Sweet potatoes (4)',
+    'Bell peppers (4)',
+    'Squash (2)',
+    'Green beans (1 lb)',
+    'Spinach (1 large bag)',
+    'Carrots (1 lb)',
+    'Tomatoes (4)',
+    'Corn (frozen 1 bag)'
+  ],
+  'Fruits': [
+    'Bananas (1 bunch)',
+    'Berries (2 pints)',
+    'Pineapple (1)',
+    'Pears (4)',
+    'Grapes (1 lb)',
+    'Citrus (2)'
+  ],
+  'Fats & Cheese': [
+    'Olive oil',
+    'Butter',
+    'Avocados (3)',
+    'Walnuts (8 oz)',
+    'Pumpkin seeds (8 oz)',
+    'Natural peanut butter (1 jar)',
+    'Parmesan',
+    'Aged cheddar (lactose-free)',
+    'Swiss cheese'
+  ],
+  'Pantry': [
+    'Black beans (2 cans)',
+    'San Marzano tomatoes (2 cans)',
+    'Honey',
+    'Maple syrup',
+    'Dark chocolate 70%+',
+    'Olipop (4-pack)'
+  ],
+  'Supplements': [
+    'Truvani plant protein',
+    'Hydrolyzed collagen',
+    'Algae omega-3 (NutraVege or Nordic Naturals)',
+    'Vitamin D3 2000 IU',
+    'Magnesium glycinate 300mg',
+    'Creatine monohydrate'
+  ]
+};
+
+function renderCheats() {
+  const html = Object.entries(CHEATS).map(([k, v]) => `
+    <div class="cheat-item" onclick="openCheat('${k}')">
+      <div class="cheat-name">${v.name}</div>
+      <div class="cheat-desc">${v.desc}</div>
+    </div>
+  `).join('');
+  document.getElementById('cheat-list').innerHTML = html;
+}
+
+function openCheat(key) {
+  const c = CHEATS[key];
+  if (!c) return;
+
+  if (key === 'grocery') {
+    let html = `<div class="modal-title">${c.name}</div><div class="cheat-content">`;
+    Object.entries(GROCERY_LIST).forEach(([cat, items]) => {
+      html += `<div class="grocery-cat"><div class="grocery-cat-name">${cat}</div>`;
+      items.forEach((item, i) => {
+        const id = `g-${cat}-${i}`;
+        const checked = state.grocery && state.grocery[id];
+        html += `<div class="grocery-item ${checked ? 'checked' : ''}" onclick="toggleGrocery('${id}', this)">
+          <div class="check-box ${checked ? '' : ''}" style="${checked ? 'background:var(--gold);border-color:var(--gold);' : ''}">
+            ${checked ? '<span style="color:var(--bg);font-size:14px;font-weight:700;">✓</span>' : ''}
+          </div>
+          <div class="grocery-text">${item}</div>
+        </div>`;
+      });
+      html += '</div>';
+    });
+    html += '<button class="btn" onclick="resetGrocery()">Reset List</button></div>';
+    openModal(html);
+    return;
+  }
+
+  openModal(`<div class="modal-title">${c.name}</div><div class="cheat-content">${c.content}</div>`);
+}
+
+function toggleGrocery(id, el) {
+  if (!state.grocery) state.grocery = {};
+  state.grocery[id] = !state.grocery[id];
+  save();
+  el.classList.toggle('checked');
+  const box = el.querySelector('.check-box');
+  if (state.grocery[id]) {
+    box.style.background = 'var(--gold)';
+    box.style.borderColor = 'var(--gold)';
+    box.innerHTML = '<span style="color:var(--bg);font-size:14px;font-weight:700;">✓</span>';
+  } else {
+    box.style.background = 'var(--bg)';
+    box.style.borderColor = 'var(--border-strong)';
+    box.innerHTML = '';
+  }
+}
+
+function resetGrocery() {
+  state.grocery = {};
+  save();
+  openCheat('grocery');
+}
+
+// ========== HISTORY ==========
+function renderHistory() {
+  const days = [];
+  const today = new Date();
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    const m = state.metrics[key];
+    const daily = state.daily[key];
+    days.push({
+      date: d,
+      key,
+      metrics: m,
+      daily: daily,
+      label: d.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' })
+    });
+  }
+
+  const html = days.map(d => {
+    const m = d.metrics || {};
+    const xp = (d.daily && d.daily.bDailyDone ? 15 : 0) + (d.daily && d.daily.mainDone ? 50 : 0) + (m.timestamp ? 5 : 0);
+
+    const bars = METRICS.map(metric => {
+      const val = m[metric.key];
+      if (val === undefined) return '<div class="history-bar"></div>';
+      const pct = (val - metric.min) / (metric.max - metric.min) * 100;
+      let color = 'var(--blue)';
+      if (metric.key === 'sleep') color = val >= 7 ? 'var(--green)' : val >= 6 ? 'var(--yellow)' : 'var(--red)';
+      else if (metric.key === 'rpe') color = 'var(--purple)';
+      else color = val <= 2 ? 'var(--green)' : val <= 5 ? 'var(--yellow)' : 'var(--red)';
+      return `<div class="history-bar" title="${metric.label}: ${val}${metric.suffix}"><div class="history-bar-fill" style="height: ${pct}%; background: ${color};"></div></div>`;
+    }).join('');
+
+    return `<div class="history-row">
+      <div class="history-date">${d.label}</div>
+      <div class="history-bar-wrap">${bars}</div>
+      <div class="history-xp">${xp ? '+' + xp : '—'}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('history-list').innerHTML = `
+    <div style="font-size: 10px; color: var(--text-dim); margin-bottom: 8px; display: grid; grid-template-columns: 60px 1fr 60px; gap: 8px;">
+      <span>Date</span>
+      <span style="text-align: center;">Sleep · RPE · Hip · Ankle · Back</span>
+      <span style="text-align: right;">XP</span>
+    </div>
+    ${html}
+  `;
+}
+
+// ========== WEEKLY CHECK-IN ==========
+function openCheckIn() {
+  const html = `
+    <div class="modal-title">Weekly Council Check-In</div>
+    <div class="cheat-content">
+      <p style="font-style: italic; color: var(--text-dim); font-size: 12px;">Sunday review. Be honest with thy own counsel. +30 XP for completing.</p>
+
+      <label>Performance this week (longest run, heaviest lift, soccer touches):</label>
+      <textarea id="ci-perf" rows="3" placeholder="e.g., 30-min continuous run, 215 lb DL, 100 inside-passes..."></textarea>
+
+      <label>Right Hip trajectory:</label>
+      <select id="ci-hip"><option>↓ Better</option><option>= Same</option><option>↑ Worse</option></select>
+      <label>Right Ankle trajectory:</label>
+      <select id="ci-ankle"><option>↓ Better</option><option>= Same</option><option>↑ Worse</option></select>
+      <label>Hamstrings/Low Back trajectory:</label>
+      <select id="ci-back"><option>↓ Better</option><option>= Same</option><option>↑ Worse</option></select>
+      <label>Core/Neck/Jaw trajectory:</label>
+      <select id="ci-core"><option>↓ Better</option><option>= Same</option><option>↑ Worse</option></select>
+      <label>Right Rib/Scap trajectory:</label>
+      <select id="ci-rib"><option>↓ Better</option><option>= Same</option><option>↑ Worse</option></select>
+
+      <label>Sleep average + Whoop recovery average:</label>
+      <input type="text" id="ci-sleep" placeholder="e.g., 7h 12m / 68% recovery">
+
+      <label>Nutrition (% template / treats / hydration):</label>
+      <input type="text" id="ci-nutrition" placeholder="e.g., 80% on template, 3 treats, 90 oz/day">
+
+      <label>One thing that worked:</label>
+      <input type="text" id="ci-worked" placeholder="">
+
+      <label>One thing that didn't:</label>
+      <input type="text" id="ci-didnt" placeholder="">
+
+      <label>Adjustment for next week:</label>
+      <input type="text" id="ci-adjust" placeholder="">
+
+      <button class="btn btn-primary" onclick="submitCheckIn()">Submit Check-In (+30 XP)</button>
+    </div>
+  `;
+  openModal(html);
+}
+
+function submitCheckIn() {
+  const week = getCurrentWeek();
+  state.weeklyCheckIns[week] = {
+    timestamp: Date.now(),
+    perf: document.getElementById('ci-perf').value,
+    hip: document.getElementById('ci-hip').value,
+    ankle: document.getElementById('ci-ankle').value,
+    back: document.getElementById('ci-back').value,
+    core: document.getElementById('ci-core').value,
+    rib: document.getElementById('ci-rib').value,
+    sleep: document.getElementById('ci-sleep').value,
+    nutrition: document.getElementById('ci-nutrition').value,
+    worked: document.getElementById('ci-worked').value,
+    didnt: document.getElementById('ci-didnt').value,
+    adjust: document.getElementById('ci-adjust').value
+  };
+  save();
+  awardXP(30, 'Weekly check-in inscribed');
+  awardStat('Discipline', 1);
+  closeModal();
+}
+
+// ========== PHASE GATES ==========
+const GATES = {
+  4: {
+    title: 'Phase 1 Gate · End of Week 4',
+    intro: 'To progress to Build Phase, all four trials must be passed.',
+    criteria: [
+      'Right hip pain ≤2/10 in deep squat',
+      'Right leg tingling NOT worsening',
+      'Sleep averaging >7h actual',
+      'Completed 20-min continuous run'
+    ]
+  },
+  8: {
+    title: 'Phase 2 Gate · End of Week 8',
+    intro: 'To progress to Integration Phase, all four trials must be passed.',
+    criteria: [
+      'Right hip pain ≤1/10 in all positions',
+      'Completed 50-min continuous run pain-free',
+      'Right-foot inside striking pain-free',
+      'Ankle dorsiflexion ≥75% of left side'
+    ]
+  },
+  12: {
+    title: 'Goal Week · End of Week 12',
+    intro: 'Final boss. The transformation made tangible.',
+    criteria: [
+      '90-minute continuous run completed',
+      'All five wounds trending down or resolved',
+      'Right-foot striking at full effort',
+      'Ready for fall rec league soccer',
+      'Body feels "ready to run at any moment"'
+    ]
+  }
+};
+
+function openGate(week) {
+  const gate = GATES[week];
+  const saved = (state.gates && state.gates[week]) || {};
+
+  let html = `<div class="modal-title">${gate.title}</div><div class="cheat-content">
+    <p style="font-style: italic; color: var(--text-dim);">${gate.intro}</p>
+  `;
+  gate.criteria.forEach((crit, i) => {
+    const met = saved[i] === true;
+    html += `<div class="gate-criterion ${met ? 'met' : ''}" onclick="toggleGate(${week}, ${i}, this)">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="check-box" style="${met ? 'background:var(--green);border-color:var(--green);' : ''}">${met ? '<span style="color:var(--bg);font-size:14px;font-weight:700;">✓</span>' : ''}</div>
+        <div class="gate-criterion-name">${crit}</div>
+      </div>
+    </div>`;
+  });
+  html += `<button class="btn btn-primary" onclick="completeGate(${week})">Mark Gate Complete (+200 XP)</button></div>`;
+  openModal(html);
+}
+
+function toggleGate(week, i, el) {
+  if (!state.gates) state.gates = {};
+  if (!state.gates[week]) state.gates[week] = {};
+  state.gates[week][i] = !state.gates[week][i];
+  save();
+  el.classList.toggle('met');
+  const box = el.querySelector('.check-box');
+  if (state.gates[week][i]) {
+    box.style.background = 'var(--green)';
+    box.style.borderColor = 'var(--green)';
+    box.innerHTML = '<span style="color:var(--bg);font-size:14px;font-weight:700;">✓</span>';
+  } else {
+    box.style.background = 'var(--bg)';
+    box.style.borderColor = 'var(--border-strong)';
+    box.innerHTML = '';
+  }
+}
+
+function completeGate(week) {
+  const saved = (state.gates && state.gates[week]) || {};
+  const gate = GATES[week];
+  const allMet = gate.criteria.every((_, i) => saved[i] === true);
+  if (!allMet) {
+    if (!confirm('Not all criteria are marked met. Complete anyway?')) return;
+  }
+  if (!state.gates) state.gates = {};
+  state.gates[week].completed = true;
+  state.gates[week].completedAt = Date.now();
+  save();
+  awardXP(200, `Phase Gate ${week} cleared!`);
+  awardStat('Discipline', 5);
+  closeModal();
+  showToast(`✦ GATE ${week} CLEARED ✦`);
+}
+
+// ========== UTILS ==========
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `character_codex_${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Codex exported.');
+}
+
+function resetAll() {
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+// ========== INIT ==========
+load();
+renderToday();
+renderCharacter();
+</script>
+<!-- ========== APP CONTENT END ========== -->
+
+</body>
+</html>
